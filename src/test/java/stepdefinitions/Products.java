@@ -14,6 +14,7 @@ import io.restassured.specification.RequestSpecification;
 import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
 import org.json.simple.JSONObject;
+import utils.configUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,15 +28,17 @@ public class Products {
     public ResponseBody body;
     Map<String, Object> requestParams = new HashMap<>();
 
-    @Given("I hit the url of get products api endpoint")
-    public void i_hit_the_url_of_get_products_api_endpoint() {
-        RestAssured.baseURI="https://fakestoreapi.com/";
+    @Given("I hit the url of products api endpoint")
+    public void i_hit_the_url_of_products_api_endpoint() {
+        RestAssured.baseURI= configUtils.getBaseUri();
+        httpRequest=given();
     }
 
     @When("I pass the url of products in the request")
     public void i_pass_the_url_of_products_in_the_request() {
         httpRequest = given();
         response=httpRequest.get("products");
+        System.out.println(response);
     }
 
     @Then("^I receive the response code as (.*)$")
@@ -47,17 +50,11 @@ public class Products {
     @Then("^I verify that the rate of the first product is (.*)$")
     public void i_verify_that_the_rate_of_first_product_is(String rate) {
         body=response.getBody();
-        String responseBody=body.asString();
         JsonPath jsonpath=response.jsonPath();
         String s=jsonpath.getJsonObject("rating[0].rate").toString();
         assertEquals(rate,s);
     }
 
-    @Given("I hit the url of post products api endpoint")
-    public void i_hit_the_url_of_post_products_api_endpoint() {
-        RestAssured.baseURI="https://fakestoreapi.com/";
-        httpRequest=given();
-    }
 
     @And("^I pass the request body of product details (.*?), (.*?), (.*?), (.*?), (.*?)$")
     public void i_pass_the_request_body_of_product_title(String title,float price,String description,String image,String category) {
@@ -69,6 +66,7 @@ public class Products {
         httpRequest.body(requestParams.toString());
         Response response=httpRequest.post("products");
         ResponseBody body=response.getBody();
+
 
     }
 
@@ -82,11 +80,6 @@ public class Products {
         assertEquals(id,s);
     }
 
-    @Given("I hit the url of put products api endpoint")
-    public void i_hit_the_url_of_put_products_api_endpoint() {
-        RestAssured.baseURI="https://fakestoreapi.com/";
-        requestParams=new JSONObject();
-    }
 
     @When("^I pass the url of products in the request with (.*)$")
     public void i_pass_the_url_of_products_in_the_request_with(int id,String title) {
@@ -94,12 +87,6 @@ public class Products {
         requestParams.put("title",title);
         httpRequest.body(requestParams.toString());
         response=httpRequest.put("products/{id}",id);
-    }
-
-    @Given("I hit the url of delete products api endpoint")
-    public void i_hit_the_url_of_delete_products_api_endpoint() {
-        RestAssured.baseURI = "https://fakestoreapi.com/";
-        requestParams = new JSONObject();
     }
 
     @When("^I pass the url of delete products in the request with (.*)$")
