@@ -98,4 +98,11 @@ public class Products {
                 .statusCode(200);
     }
 
+    @Then("^Retrieve the products of category as (.*)$")
+    public void Retrieve_the_products_of_category_jewelery(String category){
+        httpRequest=RestAssured.given();
+        httpRequest.pathParam("category", category);
+      Response r=  httpRequest.get("/products/category/{category}");
+        System.out.println(response.asString());
+    }
 }
