@@ -38,7 +38,6 @@ public class Products {
     public void i_pass_the_url_of_products_in_the_request() {
         httpRequest = given();
         response=httpRequest.get("products");
-        System.out.println(response);
     }
 
     @Then("^I receive the response code as (.*)$")
@@ -101,8 +100,18 @@ public class Products {
     @Then("^Retrieve the products of category as (.*)$")
     public void Retrieve_the_products_of_category_jewelery(String category){
         httpRequest=RestAssured.given();
-        httpRequest.pathParam("category", category);
-      Response r=  httpRequest.get("/products/category/{category}");
+        httpRequest.get("/products/category/"+category)
+                .then()
+                .statusCode(200);
+    }
+
+    @Then("^Retrieve the product details of product id (.*)$")
+    public void Retrive_the_product_details_of_product_id(String id){
+        httpRequest=RestAssured.given();
+        Response response=httpRequest.get("/products/"+id);
+                response.then()
+                .statusCode(200);
         System.out.println(response.asString());
+
     }
 }

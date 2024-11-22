@@ -16,8 +16,11 @@ Feature: Get all products from the api
   @getProducts
   Scenario: Verify the get the product category related to the jewelery
     Given I hit the url of products api endpoint
-    When I pass the url of products in the request
     Then Retrieve the products of category as jewelery
 
+  @getProducts
+  Scenario: Get the products only related to specific Id
+    Given I hit the url of products api endpoint
+    Then Retrieve the product details of product id 8
 
 
