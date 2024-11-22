@@ -80,12 +80,17 @@ public class Products {
     }
 
 
-    @When("^I pass the url of products in the request with (.*)$")
+    @When("^I pass the url of products in the request with id (.*?) and title (.*?)$")
     public void i_pass_the_url_of_products_in_the_request_with(int id,String title) {
         httpRequest=RestAssured.given();
         requestParams.put("title",title);
+        httpRequest.header("Content-Type","application/json");
         httpRequest.body(requestParams.toString());
-        response=httpRequest.put("products/{id}",id);
+        response=httpRequest.put("/products/"+id);
+               response .then()
+                .statusCode(200);
+        System.out.println("Response: " + response.asString());
+        System.out.println("Status Code: " + response.getStatusCode());
     }
 
     @When("^I pass the url of delete products in the request with (.*)$")
@@ -112,6 +117,5 @@ public class Products {
                 response.then()
                 .statusCode(200);
         System.out.println(response.asString());
-
     }
 }
