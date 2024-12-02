@@ -1,6 +1,6 @@
 {
   "api": {
     "productsUri": "https://fakestoreapi.com/",
-    "petsUri": "https://petstore.swagger.io/v2/pet"
+    "userUri":"https://petstore.swagger.io/v2/user/"
   }
 }

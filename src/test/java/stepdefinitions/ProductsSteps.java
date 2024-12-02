@@ -1,33 +1,22 @@
 package stepdefinitions;
 
-import io.cucumber.cienvironment.internal.com.eclipsesource.json.JsonObject;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.restassured.RestAssured;
-import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
 import io.restassured.specification.RequestSpecification;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
-import org.json.simple.JSONObject;
-import utils.configUtils;
+
 import methods.ProductsActions;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Products extends ProductsActions{
-
-    public int StatusCode;
-    public RequestSpecification httpRequest;
-    public Response response;
-    public int ResponseCode;
-    public ResponseBody body;
-    Map<String, Object> requestParams = new HashMap<>();
+public class ProductsSteps extends ProductsActions{
 
     ProductsActions products=new ProductsActions();
 

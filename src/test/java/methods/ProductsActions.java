@@ -10,6 +10,7 @@ import utils.configUtils;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
 
@@ -23,14 +24,17 @@ public class ProductsActions extends configUtils {
     Map<String, Object> requestParams = new HashMap<>();
     public JsonPath jsonPath;
 
-    public void gotourl(String uri){
-        RestAssured.baseURI= configUtils.getBaseUri(uri);
+    public void gotourl(String preference){
+        RestAssured.baseURI=configUtils.getBaseUri(preference);
         httpRequest=given();
+        System.out.println(baseURI);
     }
 
     public void gorelevanturl(String uri){
         httpRequest = given();
         response=httpRequest.get(uri);
+        body=response.getBody();
+        response.getStatusCode();
     }
 
     public void confirmstatuscode(int code){
