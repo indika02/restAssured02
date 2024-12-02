@@ -1,5 +1,6 @@
 {
   "api": {
-    "baseUri": "https://fakestoreapi.com/"
+    "productsUri": "https://fakestoreapi.com/",
+    "petsUri": "https://petstore.swagger.io/v2/pet"
   }
 }

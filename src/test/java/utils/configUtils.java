@@ -19,8 +19,8 @@ public class configUtils {
         }
     }
 
-    public static String getBaseUri() {
-        return ((Map<String, String>) config.get("api")).get("baseUri");
+    public static String getBaseUri(String uri) {
+        return ((Map<String, String>) config.get("api")).get(uri);
     }
 }
 

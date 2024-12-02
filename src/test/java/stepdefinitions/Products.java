@@ -15,11 +15,12 @@ import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
 import org.json.simple.JSONObject;
 import utils.configUtils;
+import methods.ProductsActions;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Products {
+public class Products extends ProductsActions{
 
     public int StatusCode;
     public RequestSpecification httpRequest;
@@ -28,94 +29,58 @@ public class Products {
     public ResponseBody body;
     Map<String, Object> requestParams = new HashMap<>();
 
-    @Given("I hit the url of products api endpoint")
-    public void i_hit_the_url_of_products_api_endpoint() {
-        RestAssured.baseURI= configUtils.getBaseUri();
-        httpRequest=given();
+    ProductsActions products=new ProductsActions();
+
+    @Given("^Go to main url of products as (.*)$")
+    public void i_hit_the_url_of_products_api_endpoint(String url) {
+       products.gotourl(url);
     }
 
-    @When("I pass the url of products in the request")
-    public void i_pass_the_url_of_products_in_the_request() {
-        httpRequest = given();
-        response=httpRequest.get("products");
+    @When("^Pass the url for (.*)$")
+    public void i_pass_the_url_of_products_in_the_request(String url) {
+       products.gorelevanturl(url);
+        System.out.println(url);
     }
 
-    @Then("^I receive the response code as (.*)$")
+    @Then("^Confirm the response code as (.*)$")
     public void i_receive_the_response_code_as_200(int responseCode) {
-        ResponseCode=response.getStatusCode();
-        assertEquals(ResponseCode,responseCode);
+       products.confirmstatuscode(responseCode);
     }
 
-    @Then("^I verify that the rate of the first product is (.*)$")
+    @Then("^Verify the rate of the first product is (.*)$")
     public void i_verify_that_the_rate_of_first_product_is(String rate) {
-        body=response.getBody();
-        JsonPath jsonpath=response.jsonPath();
-        String s=jsonpath.getJsonObject("rating[0].rate").toString();
-        assertEquals(rate,s);
+       products.verifyrate(rate);
     }
 
 
-    @And("^I pass the request body of product details (.*?), (.*?), (.*?), (.*?), (.*?)$")
+    @And("^Pass the request body for product details as (.*?), (.*?), (.*?), (.*?), (.*?)$")
     public void i_pass_the_request_body_of_product_title(String title,float price,String description,String image,String category) {
-        requestParams.put("title",title);
-        requestParams.put("price",price);
-        requestParams.put("description",description);
-        requestParams.put("image",image);
-        requestParams.put("category",category);
-        httpRequest.body(requestParams.toString());
-        Response response=httpRequest.post("products");
-        ResponseBody body=response.getBody();
-
-
+        products.postdata(title,price,description,image,category);
     }
 
-    @Then("^I receive the response body with id as (.*)$")
-    public void i_receive_the_response_body_with_id_as(String id) {
-        httpRequest.body(requestParams.toString());
-        Response response=httpRequest.post("products");
-        ResponseBody body=response.getBody();
-        JsonPath jsonpath=body.jsonPath();
-        String s=jsonpath.getJsonObject("id").toString();
-        assertEquals(id,s);
+    @Then("^Verify the new product' id as (.*)$")
+    public void verify_the_new_product_id_as(String id) {
+       products.verifynewproductid(id);
     }
 
 
-    @When("^I pass the url of products in the request with id (.*?) and title (.*?)$")
-    public void i_pass_the_url_of_products_in_the_request_with(int id,String title) {
-        httpRequest=RestAssured.given();
-        requestParams.put("title",title);
-        httpRequest.header("Content-Type","application/json");
-        httpRequest.body(requestParams.toString());
-        response=httpRequest.put("/products/"+id);
-               response .then()
-                .statusCode(200);
-        System.out.println("Response: " + response.asString());
-        System.out.println("Status Code: " + response.getStatusCode());
+    @When("^Pass the data for updating with id as (.*?) and data as title (.*?)$")
+    public void pass_the_data_for_products_with(String id,String title) {
+       products.updateproducttitle(id,title);
     }
 
-    @When("^I pass the url of delete products in the request with (.*)$")
-    public void i_pass_the_url_of_delete_products_in_the_request_with(String id) {
-        httpRequest = RestAssured.given();
-        httpRequest.pathParam("id", id);
-        httpRequest.delete("/products/{id}")
-                .then()
-                .statusCode(200);
+    @When("^Pass the id for delete product as (.*)$")
+    public void pass_the_id_for_delete_product_as(String id) {
+        products.deleteproductbyid(id);
     }
 
     @Then("^Retrieve the products of category as (.*)$")
     public void Retrieve_the_products_of_category_jewelery(String category){
-        httpRequest=RestAssured.given();
-        httpRequest.get("/products/category/"+category)
-                .then()
-                .statusCode(200);
+        products.retrieveselectedCategory(category);
     }
 
     @Then("^Retrieve the product details of product id (.*)$")
-    public void Retrive_the_product_details_of_product_id(String id){
-        httpRequest=RestAssured.given();
-        Response response=httpRequest.get("/products/"+id);
-                response.then()
-                .statusCode(200);
-        System.out.println(response.asString());
+    public void Retrieve_the_product_details_of_product_id(String id){
+        products.retrieveproductbyid(id);
     }
 }
